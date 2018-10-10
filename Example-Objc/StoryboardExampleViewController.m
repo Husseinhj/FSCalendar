@@ -131,11 +131,9 @@
 {
     BOOL shouldSelect = ![_datesShouldNotBeSelected containsObject:[self.dateFormatter1 stringFromDate:date]];
     if (!shouldSelect) {
-        [[[UIAlertView alloc] initWithTitle:@"FSCalendar"
-                                    message:[NSString stringWithFormat:@"FSCalendar delegate forbid %@  to be selected",[self.dateFormatter1 stringFromDate:date]]
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil, nil] show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"FSCalendar" message:[NSString stringWithFormat:@"FSCalendar delegate forbid %@  to be selected",[self.dateFormatter1 stringFromDate:date]] preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alertController animated:YES completion:nil];
     } else {
         NSLog(@"Should select date %@",[self.dateFormatter1 stringFromDate:date]);
     }
@@ -153,12 +151,6 @@
 - (void)calendarCurrentPageDidChange:(FSCalendar *)calendar
 {
     NSLog(@"did change to page %@",[self.dateFormatter1 stringFromDate:calendar.currentPage]);
-}
-
-- (void)calendar:(FSCalendar *)calendar boundingRectWillChange:(CGRect)bounds animated:(BOOL)animated
-{
-    _calendarHeightConstraint.constant = CGRectGetHeight(bounds);
-    [self.view layoutIfNeeded];
 }
 
 - (CGPoint)calendar:(FSCalendar *)calendar appearance:(FSCalendarAppearance *)appearance titleOffsetForDate:(NSDate *)date
@@ -216,14 +208,8 @@
     if (self.calendar.firstWeekday != config.firstWeekday) {
         self.calendar.firstWeekday = config.firstWeekday;
     }
-    
     if (self.calendar.scrollDirection != config.scrollDirection) {
         self.calendar.scrollDirection = config.scrollDirection;
-        [[[UIAlertView alloc] initWithTitle:@"FSCalendar"
-                                    message:[NSString stringWithFormat:@"Now swipe %@",@[@"Vertically", @"Horizontally"][self.calendar.scrollDirection]]
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil, nil] show];
     }
 }
 
